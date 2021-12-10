@@ -13,5 +13,5 @@ async def bot_start(message: types.Message):
         await message.answer(f"Здравствуйте админ, {message.from_user.full_name}!\n"+"Выберите дальнейшие действия.", reply_markup=button_bot.admin_menu)
         await states_bot.Admins_state.menu_button.set()
     else:
-        await message.answer(f"Здравствуйте, {message.from_user.full_name}!\n"+"Выберите инетрисующую Вас ваканию:")
+        await message.answer(f"Здравствуйте, {message.from_user.full_name}!\n"+"Выберите инетрисующую Вас ваканию:", reply_markup=button_bot.vacant_list)
         await states_bot.Users_state.list_vacant.set()

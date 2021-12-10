@@ -23,4 +23,5 @@ class Users_state(StatesGroup):
     
     question_for_testing = State()
 
-    send_application = State()
+    send_application_or_testing = State()
+
