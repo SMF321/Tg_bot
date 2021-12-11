@@ -1,12 +1,14 @@
 from telethon import TelegramClient
-from data import config
+import sys
+sys.path.append('data')
+from config import api_id, api_hash
 
 
-client = TelegramClient('anon', config.api_id, config.api_hash)
+client = TelegramClient('anon', api_id, api_hash)
 
 
 async def main():
-    await client.send_message('+79817382780', 'Hello, friend!')
+    await client.send_message('+79633477417', 'Hello, friend!')
 
 
 with client:
