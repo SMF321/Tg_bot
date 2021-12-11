@@ -1,84 +1,80 @@
 from aiogram import types
 from aiogram.dispatcher.filters import state
-from states import states_bot
 from loader import dp
 from aiogram.dispatcher import FSMContext
 
+from states import states_bot
 from keyboards.default import button_bot
+
+
 
 @dp.message_handler(state=states_bot.Users_state.list_vacant, content_types=types.ContentTypes.ANY)
 async def bot_echo_all(message: types.Message, state: FSMContext):
     if message.text in button_bot.vacant_mass:
         state = await state.get_state()
-        await message.answer('Спасибо за ответ!\nЗаполните превичное резюме чтоб мы передали его в приемную комиссию.')
+        await message.answer('Спасибо за ответ!\nЗаполните превичное резюме для передачи его в приемную комиссию.')
         await message.answer('Введите Ваше ФИО\nНапример(Иванов Иван Иванович)')
         await states_bot.Users_state.fio.set()
 
 @dp.message_handler(state=states_bot.Users_state.fio, content_types=types.ContentTypes.ANY)
 async def bot_echo_all(message: types.Message, state: FSMContext):
     state = await state.get_state()
-    await message.answer(f'{message.text}, напишите пожалуйта свою дату рождения.\nНапример(01.01.2000)')
-    await message.answer(f"Эхо в состоянии <code>{state}</code>.\n")
-    await states_bot.Users_state.date_birth.set()
-
-@dp.message_handler(state=states_bot.Users_state.date_birth, content_types=types.ContentTypes.ANY)
-async def bot_echo_all(message: types.Message, state: FSMContext):
-    state = await state.get_state()
-    await message.answer(f'{message.text}, красивая дата, помню ее как вчера...\nГде проживаете или хотели бы найти работу?\nНапример(Москва/Сакнкт-Петербург/Екатеринбург)')
+    await message.answer(f'{message.text}, напишите пожалуйта город в каком хотели бы работать.\nНапример(Москва/Сакнкт-Петербург/Екатеринбург)')
     await message.answer(f"Эхо в состоянии <code>{state}</code>.\n")
     await states_bot.Users_state.city.set()
 
 @dp.message_handler(state=states_bot.Users_state.city, content_types=types.ContentTypes.ANY)
 async def bot_echo_all(message: types.Message, state: FSMContext):
     state = await state.get_state()
-    await message.answer(f'{message.text}...\nБыл там на днях)\nТеперь расскажите пожалуйста какое у вас образование.\nНапример(Высшее/Средее-профессиональное/Среднее-общее)')
+    await message.answer(f'{message.text}...\nБыл там на днях)\nТеперь напишите дату рождения.\nНапример(01.01.2000)')
     await message.answer(f"Эхо в состоянии <code>{state}</code>.\n")
-    await states_bot.Users_state.education.set()
+    await states_bot.Users_state.date_birth.set()
 
-@dp.message_handler(state=states_bot.Users_state.education, content_types=types.ContentTypes.ANY)
+@dp.message_handler(state=states_bot.Users_state.date_birth, content_types=types.ContentTypes.ANY)
 async def bot_echo_all(message: types.Message, state: FSMContext):
     state = await state.get_state()
-    await message.answer(f'{message.text}, понял.\nБыл ли у Вас поыт работы в данной сфере, если был то сколько лет?\nНапример(5 лет/-)')
+    await message.answer(f'{message.text}, красивая дата, помню ее как вчера...\nУкажите Ваш пол:?', reply_markup=button_bot.sex)
     await message.answer(f"Эхо в состоянии <code>{state}</code>.\n")
-    await states_bot.Users_state.experience.set()
+    await states_bot.Users_state.sex.set()
 
-
-@dp.message_handler(state=states_bot.Users_state.experience, content_types=types.ContentTypes.ANY)
+@dp.message_handler(state=states_bot.Users_state.sex, content_types=types.ContentTypes.ANY)
 async def bot_echo_all(message: types.Message, state: FSMContext):
-    state = await state.get_state()
-    await message.answer(f'{message.text}, неплохо.\nГражданином какой страны Вы являетесь?\nНапример(Российская Федерация/Узбекистан/казахстан)')
-    await message.answer(f"Эхо в состоянии <code>{state}</code>.\n")
-    await states_bot.Users_state.citizenship.set()
-
+    if message.text in button_bot.sex_mass:
+        state = await state.get_state()
+        await message.answer(f'{message.text}, ок.\nГражданином какой страны Вы являетесь?\nНапример(Российская Федерация/Узбекистан/казахстан)')
+        await message.answer(f"Эхо в состоянии <code>{state}</code>.\n")
+        await states_bot.Users_state.citizenship.set()
 
 @dp.message_handler(state=states_bot.Users_state.citizenship, content_types=types.ContentTypes.ANY)
 async def bot_echo_all(message: types.Message, state: FSMContext):
     state = await state.get_state()
-    await message.answer(f'{message.text}, понятно.\nУ Вас есть разрешение на работу?', reply_markup=button_bot.yes_no)
+    await message.answer(f'{message.text}, понял.\nБыл ли у Вас опыт работы в данной сфере, если был то сколько лет?\nНапример(5 лет/-)')
     await message.answer(f"Эхо в состоянии <code>{state}</code>.\n")
-    await states_bot.Users_state.work_permit.set()
+    await states_bot.Users_state.experience.set()
 
-@dp.message_handler(state=states_bot.Users_state.work_permit, content_types=types.ContentTypes.ANY)
-async def bot_echo_all(message: types.Message, state: FSMContext):
-    if message.text in button_bot.yes_or_no:
-        state = await state.get_state()
-        await message.answer(f'На какую зароботную плату расчитываете?\nНапример(40000)')
-        await message.answer(f"Эхо в состоянии <code>{state}</code>.\n")
-        await states_bot.Users_state.zp.set()
-
-@dp.message_handler(state=states_bot.Users_state.zp, content_types=types.ContentTypes.ANY)
+@dp.message_handler(state=states_bot.Users_state.experience, content_types=types.ContentTypes.ANY)
 async def bot_echo_all(message: types.Message, state: FSMContext):
     state = await state.get_state()
-    await message.answer(f'{message.text}, тоже такую хочу)\nЕсть ли еще какая-то информация, которую я должен зать при рассмотреии Вашей кандедатуры.')
+    await message.answer(f'{message.text}, понятно.\nТип занятости:', reply_markup=button_bot.work_time)
     await message.answer(f"Эхо в состоянии <code>{state}</code>.\n")
-    await states_bot.Users_state.about_me.set()
+    await states_bot.Users_state.time_type.set()
 
-@dp.message_handler(state=states_bot.Users_state.about_me, content_types=types.ContentTypes.ANY)
+
+@dp.message_handler(state=states_bot.Users_state.time_type, content_types=types.ContentTypes.ANY)
+async def bot_echo_all(message: types.Message, state: FSMContext):
+    if message.text in button_bot.type_work_time:
+        state = await state.get_state()
+        await message.answer(f'{message.text}, понятно.\nЕсть ли у вас навыки о которых мы должны знать?\nНапример(Когда-то разработал telegram...)')
+        await message.answer(f"Эхо в состоянии <code>{state}</code>.\n")
+        await states_bot.Users_state.skills.set()
+
+@dp.message_handler(state=states_bot.Users_state.skills, content_types=types.ContentTypes.ANY)
 async def bot_echo_all(message: types.Message, state: FSMContext):
     state = await state.get_state()
     await message.answer(f'Приму это к сведению.\nЕсли есть какая-то сылка на ваши достижения или портфолио, отправьте его пожалуйста.\nНапример(https://rainforce.spb.ru/)')
     await message.answer(f"Эхо в состоянии <code>{state}</code>.\n")
     await states_bot.Users_state.link.set()
+
 
 @dp.message_handler(state=states_bot.Users_state.link, content_types=types.ContentTypes.ANY)
 async def bot_echo_all(message: types.Message, state: FSMContext):
