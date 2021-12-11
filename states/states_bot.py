@@ -2,25 +2,27 @@ from aiogram.dispatcher.filters.state import State, StatesGroup
 
 class Admins_state(StatesGroup):
     menu_button = State()
-
+    redactor_vacant = State()
     find_vacant = State()
-    filters = State()
-    create_test = State()
+    find_in_db_filter = State()
+    create_and_redactor_test = State()
+    stat = State()
 
 class Users_state(StatesGroup):
     list_vacant = State()
 
     fio = State()
-    date_birth = State()
     city = State()
-    education = State()
-    experience = State()
+    date_birth = State()
+    sex = State()
     citizenship = State()
-    work_permit = State()
-    zp = State()
-    about_me = State()
+    experience = State()
+    time_type = State()
+    skills = State()
+    portfolio = State()
     link = State()
     
     question_for_testing = State()
 
-    send_application = State()
+    send_application_or_testing = State()
+
